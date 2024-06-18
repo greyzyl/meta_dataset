@@ -1,0 +1,12 @@
+*.json
+*.png
+*.jpg
+*.jsonl
+*.md
+*.egg-info
+*.html
+*.tar.gz
+*.tsv
+*.zip
+.history
+
