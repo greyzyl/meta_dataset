@@ -135,7 +135,7 @@ def convert_bbox(words):
     y_min = min(word['quad']['y1'] for word in words)
     x_max = max(word['quad']['x2'] for word in words)
     y_max = max(word['quad']['y3'] for word in words)
-    return [x_min, y_min, x_max, y_max]
+    return [[x_min, y_min], [x_max, y_max]]
 
 def process_ocr(data):
     """
@@ -148,14 +148,14 @@ def process_ocr(data):
             quad=word['quad']
             ocr_entry = {
                 "id": i,
-                "bbox": [quad['x1'],quad['y1'],quad['x2'],quad['y2'],quad['x3'],quad['y3'],quad['x4'],quad['y4']],
+                "bbox": [[quad['x1'],quad['y1']],[quad['x2'],quad['y2']],[quad['x3'],quad['y3']],[quad['x4'],quad['y4']]],
                 "text": word["text"]
             }
             ocr_list.append(ocr_entry)
             i+=1
     return ocr_list
 def find_ocr_id(quad,ocr_list):
-    bbox=[quad['x1'],quad['y1'],quad['x2'],quad['y2'],quad['x3'],quad['y3'],quad['x4'],quad['y4']]
+    bbox=[[quad['x1'],quad['y1']],[quad['x2'],quad['y2']],[quad['x3'],quad['y3']],[quad['x4'],quad['y4']]]
     for item in ocr_list:
         if item['bbox']==bbox:
             return item["id"]
@@ -237,8 +237,8 @@ def convert_to_unified_format(input_root, output_path,img_root):
         ocr_list=process_ocr(data)
         img_path=os.path.join(img_root,os.path.basename(input_path)[:-4]+'png')
         unified_data['data'].append(add_img_data(data,ocr_list,img_path).copy())
-        # if i>10:
-        #     break
+        if i>0:
+            break
     with open(output_path, 'w', encoding='utf-8') as f:
         json.dump(unified_data, f, ensure_ascii=False, indent=4)
 def add_img_data(data,ocr_list,img_path):
@@ -267,7 +267,7 @@ def add_img_data(data,ocr_list,img_path):
 # 定义输入和输出文件路径
 input_file_path = Path("CORD/train/json")
 img_root='train/image'
-output_file_path = Path("CORD/train/cord_train.json")
+output_file_path = Path("CORD/train/cord_train_example.json")
 
 # 执行转换
 convert_to_unified_format(input_file_path, output_file_path,img_root)

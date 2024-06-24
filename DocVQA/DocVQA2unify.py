@@ -12,7 +12,7 @@ def convert_bbox(words):
     y_min = min(word['boundingBox'][1] for word in words)
     x_max = max(word['boundingBox'][4] for word in words)
     y_max = max(word['boundingBox'][5] for word in words)
-    return [x_min, y_min, x_max, y_max]
+    return [[x_min, y_min], [x_max, y_max]]
 
 def process_ocr_word(data):
     """
@@ -26,7 +26,7 @@ def process_ocr_word(data):
                 boundingBox=word['boundingBox']
                 ocr_entry = {
                     "id": i,
-                    "bbox": [boundingBox[0],boundingBox[1],boundingBox[2],boundingBox[3],boundingBox[4],boundingBox[5],boundingBox[6],boundingBox[7]],
+                    "bbox": [[boundingBox[0],boundingBox[1]],[boundingBox[2],boundingBox[3]],[boundingBox[4],boundingBox[5]],[boundingBox[6],boundingBox[7]]],
                     "text": word["text"]
                 }
                 ocr_list.append(ocr_entry)
@@ -36,14 +36,15 @@ def process_ocr_line(data,ocr_list):
     line_list=[]
     for recognition in data['recognitionResults']:
         for line in recognition['lines']:
-            line_info={'bbox':line['boundingBox']}
+            boundingBox=line['boundingBox']
+            line_info={'bbox':[[boundingBox[0],boundingBox[1]],[boundingBox[2],boundingBox[3]],[boundingBox[4],boundingBox[5]],[boundingBox[6],boundingBox[7]]]}
             word_ids=[find_ocr_id(word["boundingBox"],ocr_list) for word in line["words"]]
             line_info['word_ids']=word_ids
             line_list.append(line_info)
     return line_list
 
 def find_ocr_id(boundingBox,ocr_list):
-    bbox=[boundingBox[0],boundingBox[1],boundingBox[2],boundingBox[3],boundingBox[4],boundingBox[5],boundingBox[6],boundingBox[7]]
+    bbox=[[boundingBox[0],boundingBox[1]],[boundingBox[2],boundingBox[3]],[boundingBox[4],boundingBox[5]],[boundingBox[6],boundingBox[7]]]
     for item in ocr_list:
         if item['bbox']==bbox:
             return item["id"]
@@ -136,7 +137,7 @@ def add_img_data(img_path,
                  dense_description_data=None):
     res={
         "img_meta":{
-            "img_path": img_path,
+            "img_path": os.path.join('image',os.path.basename(img_path)),
             "shape":cv2.imread(os.path.join(img_path)).shape
         },
         
@@ -169,7 +170,6 @@ def convert_to_unified_format(ocr_root,vqa_path, output_path,img_root):
     unified_data = {
         "meta_info":{
             "dataset_name": dataset_name,
-            "img_root":img_root
         },
         
         "data": [],
@@ -195,8 +195,8 @@ def convert_to_unified_format(ocr_root,vqa_path, output_path,img_root):
         except:
             bad_case.append(ocr_json_name)
         print(i)
-        # if i>-1:
-        #     break
+        if i>-1:
+            break
     print('bad_case',bad_case)
     with open(output_path, 'w', encoding='utf-8') as f:
         json.dump(unified_data, f, ensure_ascii=False, indent=4)
@@ -205,7 +205,7 @@ def convert_to_unified_format(ocr_root,vqa_path, output_path,img_root):
 ocr_file_root = Path("DocVQA/ocr_json")
 vqa_file_path=Path("DocVQA/vqa_json/train_v1.0_withQT.json")
 img_root='DocVQA/image'
-output_file_path = Path("DocVQA/DocVQA_train.json")
+output_file_path = Path("DocVQA/DocVQA_train_example.json")
 
 # 执行转换
 convert_to_unified_format(ocr_file_root,vqa_file_path, output_file_path,img_root)
