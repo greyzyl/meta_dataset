@@ -100,7 +100,7 @@ def process_vqa(vqa_data,img_name):
                         "answer_id": answer_id,
                         "answer": answer,
                         "confidence": "yes",  # DocVQA数据集中没有提供confidence，默认设为yes
-                        "evidence": "",
+                        "evidence": [],
                         "answer_source": entry['question_types'],
                         "operation": ""
                     })

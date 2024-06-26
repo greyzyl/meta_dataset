@@ -30,6 +30,7 @@ def visualize_layout(data, img_dir):
                 rect = patches.Polygon(segmentation, linewidth=1, edgecolor='r', facecolor='none')
                 ax.add_patch(rect)
                 plt.text(segmentation[0][0], segmentation[0][1] - 10, layout_cls, color='r', fontsize=12)
+        plt.axis('off')
         plt.savefig('r.png', bbox_inches='tight')
         plt.close(fig)
         if i>10:
