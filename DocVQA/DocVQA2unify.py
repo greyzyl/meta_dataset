@@ -195,7 +195,7 @@ def convert_to_unified_format(ocr_root,vqa_path, output_path,img_root):
         except:
             bad_case.append(ocr_json_name)
         print(i)
-        if i>-1:
+        if i>5:
             break
     print('bad_case',bad_case)
     with open(output_path, 'w', encoding='utf-8') as f:

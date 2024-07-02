@@ -23,10 +23,10 @@ def visualize_caption(data, img_dir):
         # 可视化 OCR 部分
         for i,caption in enumerate(item['info']["caption"]):
             if caption['confidence']=='yes':
-                # plt.text(0,i*60 , caption['caption'], color='r', fontsize=5)
+                plt.text(0,i*60 , caption['caption'], color='r', fontsize=5)
                 print(caption['caption'])
-            # elif caption['confidence']=='normal':
-                # plt.text(0,i*60 , caption['caption'], color='b', fontsize=5)
+            elif caption['confidence']=='normal':
+                plt.text(0,i*60 , caption['caption'], color='b', fontsize=5)
         plt.axis('off')
         plt.savefig('r.png', dpi=300,bbox_inches='tight')
         plt.close(fig)

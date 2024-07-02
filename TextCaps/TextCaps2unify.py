@@ -147,8 +147,8 @@ def process_caption(caption_data):
                 "confidence":"normal",
                 "caption":refer_caption,
                 "evidence":[],
-                "answer_source":"",
-                "operation":"",
+                "answer_source":[],
+                "operation":[],
                 "img_clses":caption_data['image_classes']
             })
         i+=1

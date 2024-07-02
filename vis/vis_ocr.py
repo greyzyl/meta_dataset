@@ -52,6 +52,7 @@ def visualize_ocr_line(data, img_dir):
                 rect = patches.Polygon(bbox, linewidth=1, edgecolor='r', facecolor='none')
                 ax.add_patch(rect)
                 plt.text(bbox[0][0], bbox[0][1] , ocr['text'], color='b', fontsize=12)
+        plt.axis('off')
         plt.savefig(os.path.join('work_dir','vis',f'r{i}.png'), dpi=300,bbox_inches='tight')
         plt.close(fig)
         # if i>0:
